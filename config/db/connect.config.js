@@ -9,3 +9,13 @@ export const connectToMongoDB = async () =>{
         process.exit(1);
     }
 };
+
+export const connectToMongoDBAtlas = async () => {
+    try{
+        await mongoose.connect('mongodb+srv://Matias:<db_password>@cluster0.d86dyqd.mongodb.net/');
+        console.log(`MongoDBAtlas conectado exitosamente.!!!`)
+    }catch(error){
+        console.error(error);
+        process.exit(1);
+    }
+}
