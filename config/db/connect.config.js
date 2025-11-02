@@ -1,8 +1,15 @@
 import mongoose from "mongoose";
+import environment from '../env.config.js';
+
+const baseMongooseOpts = {
+serverSelectionTimeoutMS: 10000,
+}
 
 export const connectToMongoDB = async () =>{
     try{
-        await mongoose.connect('mongodb://127.0.0.1:27017/backend76865');
+        const uri = environment.MONGO_URI;
+        if (!uri) throw new Error("Falta MONGO_URI en el .env");
+        await mongoose. connect(uri, baseMongooseOpts);
         console.log(`MongoDB conectado Exitosamente.!!!`);
     }catch(error){
         console.error(error);
@@ -12,10 +19,18 @@ export const connectToMongoDB = async () =>{
 
 export const connectToMongoDBAtlas = async () => {
     try{
-        await mongoose.connect('mongodb+srv://Matias:<db_password>@cluster0.d86dyqd.mongodb.net/');
+        const uri = environment.MONGO_URI_ATLAS;
+        if (!uri) throw new Error("Falta MONGO_URI_ATLAS en el .env");
+        await mongoose. connect(uri, baseMongooseOpts)
         console.log(`MongoDBAtlas conectado exitosamente.!!!`)
     }catch(error){
         console.error(error);
         process.exit(1);
     }
 }
+
+export const connectAuto = async () => {
+    const target = (environment.MONGO_TARGET || "LOCAL") .toUpperCase();
+    if(target === "ATLAS") return connectMongoDBAltas();
+    return connectToMongoDB();
+}    
